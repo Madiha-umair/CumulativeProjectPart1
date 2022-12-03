@@ -17,13 +17,16 @@ namespace CumulativeProjectPart1.Controllers
 
         // GET api/values/5
         public string Get(int id)
+
+
         {
             return "value";
         }
 
         // POST api/values
-        public void Post([FromBody] string value)
+        public string  Post([FromBody] string value)
         {
+            return value;
         }
 
         // PUT api/values/5

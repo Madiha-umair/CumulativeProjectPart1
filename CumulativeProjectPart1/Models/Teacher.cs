@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace CumulativeProjectPart1.Models
+namespace CumulativeProject.Models
 {
     public class Teacher
     {
@@ -14,5 +14,9 @@ namespace CumulativeProjectPart1.Models
         public DateTime HireDate;
         public decimal Salary;
 
+
+        //parameterless constructor function
+        public Teacher() { }
     }
+
 }

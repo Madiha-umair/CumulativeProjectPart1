@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using MySql.Data.MySqlClient;
 
-namespace CumulativeProjectPart1.Models
+namespace CumulativeProject.Models
 {
     public class SchoolDbContext
     {

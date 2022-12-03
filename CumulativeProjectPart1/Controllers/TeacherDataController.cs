@@ -1,13 +1,14 @@
-﻿using CumulativeProjectPart1.Models;
+﻿using CumulativeProject.Models;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace CumulativeProjectPart1.Controllers
+namespace CumulativeProject.Controllers
 {
     public class TeacherDataController : ApiController
     {
@@ -25,7 +26,8 @@ namespace CumulativeProjectPart1.Controllers
         /// A list of teachers (first names and last names)
         /// </returns>
         [HttpGet]
-        public IEnumerable<Teacher> TeacherInformation()
+        [Route("api/TeacherData/TeacherInformation/{SearchKey?}")]
+        public IEnumerable<Teacher> TeacherInformation(string SearchKey=null)
         {
             //Creat an instance of a connection
             MySqlConnection Conn = School.AccessDatabase();
@@ -37,13 +39,15 @@ namespace CumulativeProjectPart1.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL Query
-            cmd.CommandText = "Select * from teachers";
+            cmd.CommandText = "Select * from teachers where lower(teacherfname) like lower(@key) or lower(teacherlname) like lower(@key) or lower(concat(teacherfname, ' ', teacherlname)) like lower( @key)";
+            cmd.Parameters.AddWithValue("@key", "%" +SearchKey + "%");
+            cmd.Prepare();
 
             //Gather Result Set of Query into a variable
             MySqlDataReader ResultSet = cmd.ExecuteReader();
 
             //Create an empty list of Teachers
-            List<Teacher> Teachers = new List<Teacher> { };
+            List<Teacher> Teachers = new List<Teacher>{};
             
             //Loop Through each row the Result Set
             while (ResultSet.Read())
@@ -87,8 +91,10 @@ namespace CumulativeProjectPart1.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL Query
-            cmd.CommandText = "Select * from teachers where teacherid = " +id;
-            
+            cmd.CommandText = "Select * from teachers where teacherid = @id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();  
+
             //Gather Result Set of Query into a variable
             MySqlDataReader ResultSet = cmd.ExecuteReader();
 
@@ -113,5 +119,64 @@ namespace CumulativeProjectPart1.Controllers
             //Returns the fields/information of teacher selected by the user from the list of teachers.
             return NewTeacher;
         }
+
+        /// <summary>
+        /// Delete an article from the system
+        /// </summary>
+        /// <param name="id"></param>
+        /// <example>POST : /api/TeacherData/DeleteTeacher/7</example>
+        [HttpPost]
+        public void DeleteTeacher(int id)
+        {
+            //Creat an instance of a connection
+            MySqlConnection Conn = School.AccessDatabase();
+
+            //Open the connection between the web server and data base
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL Query
+            cmd.CommandText = "Delete from teachers where teacherid = @id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+        }
+        
+        /// <summary>
+        /// Add an article into the system
+        /// </summary>
+        /// <param name="NewTeacher"></param>
+        /// <returns></returns>
+        
+        [HttpPost]
+        public void AddTeacher([FromBody]Teacher NewTeacher)
+        {
+
+            MySqlConnection Conn = School.AccessDatabase();
+
+            //Open the connection between the web server and data base
+            Conn.Open();
+
+           
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL Query
+            cmd.CommandText = "insert into teachers (teacherfname, teacherlname, hiredate, salary) values (@TeacherFname, @TeacherLname, @HireDate, @Salary)";
+            cmd.Parameters.AddWithValue("@TeacherFname",NewTeacher.TeacherFname);
+            cmd.Parameters.AddWithValue("@TeacherLname", NewTeacher.TeacherLname);
+            cmd.Parameters.AddWithValue("@Hiredate", NewTeacher.HireDate);
+            cmd.Parameters.AddWithValue("@Salary", NewTeacher.Salary);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+        }
+
     }
 }
