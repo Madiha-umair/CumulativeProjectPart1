@@ -4,26 +4,75 @@
 }
 
 <h2> New Teacher</h2>
-<form method="POST" action="/Teacher/create">
+<form method="POST" action="/Teacher/create" name="addteacher">
     <div>
         <label for="TeacherFname">First Name:</label>
-        <input type="text" id="TeacherFname" name="TeacherFname" />
+        <input type="text" id="TeacherFname" name="TeacherFname" class="TeacherFname" />
+        <span id="ErrfName"></span>
     </div>
     <div>
         <label for="TeacherLname">Last Name:</label>
-        <input type="text" id="TeacherLname" name="TeacherLname" />
+        <input type="text" id="TeacherLname" name="TeacherLname" class="TeacherLname" />
+        <span id="ErrlName"></span>
     </div>
     <div>
         <label for="HireDate">Hire Date:</label>
-        <input type="datetime-local" id="HireDate" name="Hiredate" />
+        <input type="datetime-local" id="HireDate" name="Hiredate" class="HireDate" />
+        <span id="ErrHireDate"></span>
     </div>
     <div>
         <label for="Salary">Salary:</label>
-        <input type="number" id="Salary" name="Salary" />
+        <input type="number" id="Salary" name="Salary" class="Salary" />
+        <span id="ErrSalary"></span>
     </div>
     <div class="button">
-        <button type="submit" value="Create Teacher">Create Teacher </button>
+        <button type="submit" value="Create Teacher" name="submit">Create Teacher </button>
     </div>
-
 </form>
+
+<script language="javascript" type="text/javascript">
+    var formHandle = document.forms.addteacher;
+    formHandle.onsubmit = processForm;
+    var LetterRange = /^[A-Za-z]+$/;
+    function processForm()
+    {
+        var firstname = formHandle.TeacherFname;
+        var lastname = formHandle.TeacherLname;
+        var hiredate = formHandle.HireDate;
+        var salary = formHandle.Salary;
+
+        if (!LetterRange.test(firstname.value)) { 
+            firstname.style.background = "red";
+            ErrfName.style.background = "red";
+            ErrfName.style.color = "white";
+            ErrfName.innerHTML = "*Please enter your first name in letters!";
+            firstname.focus();
+            return false;
+        }
+        else if (!LetterRange.test(lastname.value)) { 
+            lastname.style.background = "red";
+            ErrlName.style.background = "red";
+            ErrlName.style.color = "white";
+            ErrlName.innerHTML = "*Please enter your last name in letters!";
+            lastname.focus();
+            return false;
+        }
+        else if (hiredate.value === "") {
+            hiredate.style.background = "red";
+            ErrHireDate.style.background = "red";
+            ErrHireDate.style.color = "white";
+            ErrHireDate.innerHTML = "*Please enter the hire date!";
+            hiredate.focus();
+            return false;
+        }
+        else if (salary.value === "") {
+            salary.style.background = "red";
+            ErrSalary.style.background = "red";
+            ErrSalary.style.color = "white";
+            ErrSalary.innerHTML = "*Please enter the salary name in numbers!";
+            salary.focus();
+            return false;
+        }
+    }
+</script>
 
