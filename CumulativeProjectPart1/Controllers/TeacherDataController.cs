@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace CumulativeProject.Controllers
 {
@@ -27,6 +28,7 @@ namespace CumulativeProject.Controllers
         /// </returns>
         [HttpGet]
         [Route("api/TeacherData/TeacherInformation/{SearchKey?}")]
+        //[EnableCors(origins:"*", methods:"*", headers:"*")]
         public IEnumerable<Teacher> TeacherInformation(string SearchKey=null)
         {
             //Creat an instance of a connection
@@ -121,7 +123,7 @@ namespace CumulativeProject.Controllers
         }
 
         /// <summary>
-        /// Delete an article from the system
+        /// Delete a teacher from the system
         /// </summary>
         /// <param name="id"></param>
         /// <example>POST : /api/TeacherData/DeleteTeacher/7</example>
@@ -154,6 +156,7 @@ namespace CumulativeProject.Controllers
         /// <returns></returns>
         
         [HttpPost]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
         public void AddTeacher([FromBody]Teacher NewTeacher)
         {
 
@@ -173,6 +176,54 @@ namespace CumulativeProject.Controllers
             cmd.Parameters.AddWithValue("@Hiredate", NewTeacher.HireDate);
             cmd.Parameters.AddWithValue("@Salary", NewTeacher.Salary);
             cmd.Prepare();
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+        }
+
+        /// <summary>
+        /// Updates a teacher  on the MySQL database. Non-Deterministic.
+        /// </summary>
+        /// <param name="TeacherId">THe id of the teacher in the system</param>
+        /// <param name="UpdateTeacher">post content, all teacher attributes</param>
+        /// <example>POST : /api/TeacherData/UpdateTeacher/7
+        /// POST CONTENT / FORM BODY/ REQUEST BODY
+        /// {"teacherfname":"Christine", "teacherlname":"Bittle", "hiredate":"","salary":"6000"}
+        /// </example>
+        [HttpPost]
+        [Route("api/TeacherData/UpdateTeacher/{TeacherId}")]
+        // public void UpdateTeacher(Teacher UpdateTeacher) // pass the whole object of type teacher
+        // public void UpdateTeacher(int teacherId, string teacherfname,......all parameters)
+        public void UpdateTeacher(int TeacherId, [FromBody]Teacher UpdatedTeacher)
+        {
+
+            Debug.WriteLine("updating information about teacher having id" + TeacherId);
+            Debug.WriteLine("POST CONTENT");
+            Debug.WriteLine(UpdatedTeacher.TeacherFname);
+            Debug.WriteLine(UpdatedTeacher.TeacherLname);
+            Debug.WriteLine(UpdatedTeacher.HireDate);
+            Debug.WriteLine(UpdatedTeacher.Salary);
+
+            string query = "update teachers set teacherfname=@TeacherFname, teacherlname=@TeacherLname,  hiredate=@HireDate, salary=@Salary where teacherid=@TeacherId";
+
+            MySqlConnection Conn = School.AccessDatabase();
+
+            //Open the connection between the web server and data base
+            Conn.Open();
+
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+            cmd.CommandText = query;
+            //SQL Query
+
+            cmd.Parameters.AddWithValue("@TeacherId",TeacherId);
+            cmd.Parameters.AddWithValue("@TeacherFname", UpdatedTeacher.TeacherFname);
+            cmd.Parameters.AddWithValue("@TeacherLname", UpdatedTeacher.TeacherLname);
+            cmd.Parameters.AddWithValue("@Hiredate", UpdatedTeacher.HireDate);
+            cmd.Parameters.AddWithValue("@Salary", UpdatedTeacher.Salary);
+            cmd.Prepare();
+
             cmd.ExecuteNonQuery();
 
             Conn.Close();
