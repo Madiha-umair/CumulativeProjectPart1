@@ -43,6 +43,10 @@ namespace CumulativeProject.Controllers
             return View(NewTeacher);
         }
 
+        /// <summary>
+        /// Receives a POST request containing information about teacher id to be deleted from the system,
+        /// Conveys this information to the API, and redirects to the "Teacher List" page.
+        /// </summary>
         //POST: /Teacher/Delete/{id}
         public ActionResult Delete(int id)
         {
