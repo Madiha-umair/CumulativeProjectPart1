@@ -17,7 +17,7 @@
     </div>
     <div>
         <label for="HireDate">Hire Date:</label>
-        <input type="datetime-local" id="HireDate" name="Hiredate" class="HireDate" />
+        <input type="datetime-local" id="HireDate" name="HireDate" class="HireDate" />
         <span id="ErrHireDate"></span>
     </div>
     <div>
@@ -29,19 +29,17 @@
         <button type="submit" value="Create Teacher" name="submit">Create Teacher </button>
     </div>
 </form>
-
 <script language="javascript" type="text/javascript">
     var formHandle = document.forms.addteacher;
     formHandle.onsubmit = processForm;
     var LetterRange = /^[A-Za-z]+$/;
-    function processForm()
-    {
+    function processForm() {
         var firstname = formHandle.TeacherFname;
         var lastname = formHandle.TeacherLname;
         var hiredate = formHandle.HireDate;
         var salary = formHandle.Salary;
 
-        if (!LetterRange.test(firstname.value)) { 
+        if (!LetterRange.test(firstname.value)) {
             firstname.style.background = "red";
             ErrfName.style.background = "red";
             ErrfName.style.color = "white";
@@ -49,7 +47,7 @@
             firstname.focus();
             return false;
         }
-        else if (!LetterRange.test(lastname.value)) { 
+        else if (!LetterRange.test(lastname.value)) {
             lastname.style.background = "red";
             ErrlName.style.background = "red";
             ErrlName.style.color = "white";
@@ -69,10 +67,11 @@
             salary.style.background = "red";
             ErrSalary.style.background = "red";
             ErrSalary.style.color = "white";
-            ErrSalary.innerHTML = "*Please enter the salary name in numbers!";
+            ErrSalary.innerHTML = "*Please enter the salary in numbers!";
             salary.focus();
             return false;
         }
     }
 </script>
+
 

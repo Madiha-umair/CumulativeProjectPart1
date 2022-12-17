@@ -344,6 +344,7 @@
     <Content Include="Views\Teacher\DeleteConfirm.cshtml" />
     <Content Include="Views\Teacher\New.cshtml" />
     <Content Include="Views\Teacher\Edit.cshtml" />
+    <Content Include="Views\Teacher\Ajax_NewTeacher.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

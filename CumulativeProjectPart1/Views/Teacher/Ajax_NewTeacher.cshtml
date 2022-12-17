@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Ajax_NewTeacher";
+}
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Teacher/List">Back To Teachers</a>
+    </nav>
+    <h2>New Teacher</h2>
+    @{
+    /* AJAX Request to add author */
+    /* No form submission needed */
+    /* button onclick will handle form submission */
+    /* Each item has an ID for validation && ajax submission */}
+
+    <div class="inputrow">
+        <label for="TeacherFname">First Name:</label>
+        <input type="text" id="TeacherFname" name="TeacherFname" value="@Model.TeacherFname" />
+
+    </div>
+    <div class="inputrow">
+        <label for="TeacherLname">Last Name:</label>
+        <input type="text" id="TeacherLname" name="TeacherLname" value="@Model.TeacherLname"  />
+
+    </div>
+    <div class="inputrow">
+        <label for="HireDate">Hire Date:</label>
+        <input type="datetime" id="HireDate" name="HireDate" value="@Model.HireDate"/>
+    </div>
+    <div class="inputrow">
+        <label for="Salary">Salary:</label>
+        <input type="number" id="Salary" name="Salary" value="@Model.Salary" />
+    </div>
+    @{ 
+        //AddTeacher() is a JS method defined in /Scripts/teachers.js
+    }
+    <button onclick="AddTeacher();">Add Teacher</button>
+
+</div>
+<script>
+
+    function AddTeacher() {
+
+        //goal: send a request which looks like this:
+        //POST : http://localhost:51326/api/TeacherData/AddTeacher
+        //with POST data of authorname, bio, email, etc.
+
+        var URL = "http://localhost:51326/api/TeacherData/AddTeacher/";
+        //var URL = "http://localhost:59350/api/TeacherData/AddTeacher/";
+
+        var rq = new XMLHttpRequest();
+        // where is this request sent to?
+        // is the method GET or POST?
+        // what should we do with the response?
+
+        var TeacherFname = document.getElementById('TeacherFname').value;
+        var TeacherLname = document.getElementById('TeacherLname').value;
+        var HireDate = document.getElementById('HireDate').value;
+        var Salary = document.getElementById('Salary').value;
+
+        var TeacherData = {
+            "TeacherFname": TeacherFname,
+            "TeacherLname": TeacherLname,
+            "HireDate": HireDate,
+            "Salary": Salary
+        };
+
+        rq.open("POST", URL, true);
+        rq.setRequestHeader("Content-Type", "application/json");
+        rq.onreadystatechange = function () {
+            //ready state should be 4 AND status should be 200
+            if (rq.readyState == 4 && rq.status == 200) {
+                //request is successful and the request is finished
+
+                //nothing to render, the method returns nothing.
+            }
+
+        }
+        //POST information sent through the .send() method
+        rq.send(JSON.stringify(TeacherData));
+    }
+</script>

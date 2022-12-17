@@ -156,6 +156,7 @@ namespace CumulativeProject.Controllers
         /// <returns></returns>
         
         [HttpPost]
+        [Route("api/TeacherData/AddTeacher/{Teacher?}")]
         [EnableCors(origins: "*", methods: "*", headers: "*")]
         public void AddTeacher([FromBody]Teacher NewTeacher)
         {
@@ -173,7 +174,7 @@ namespace CumulativeProject.Controllers
             cmd.CommandText = "insert into teachers (teacherfname, teacherlname, hiredate, salary) values (@TeacherFname, @TeacherLname, @HireDate, @Salary)";
             cmd.Parameters.AddWithValue("@TeacherFname",NewTeacher.TeacherFname);
             cmd.Parameters.AddWithValue("@TeacherLname", NewTeacher.TeacherLname);
-            cmd.Parameters.AddWithValue("@Hiredate", NewTeacher.HireDate);
+            cmd.Parameters.AddWithValue("@HireDate", NewTeacher.HireDate);
             cmd.Parameters.AddWithValue("@Salary", NewTeacher.Salary);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
@@ -220,7 +221,7 @@ namespace CumulativeProject.Controllers
             cmd.Parameters.AddWithValue("@TeacherId",TeacherId);
             cmd.Parameters.AddWithValue("@TeacherFname", UpdatedTeacher.TeacherFname);
             cmd.Parameters.AddWithValue("@TeacherLname", UpdatedTeacher.TeacherLname);
-            cmd.Parameters.AddWithValue("@Hiredate", UpdatedTeacher.HireDate);
+            cmd.Parameters.AddWithValue("@HireDate", UpdatedTeacher.HireDate);
             cmd.Parameters.AddWithValue("@Salary", UpdatedTeacher.Salary);
             cmd.Prepare();
 

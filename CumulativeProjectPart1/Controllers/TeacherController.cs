@@ -57,6 +57,27 @@ namespace CumulativeProject.Controllers
         {
             return View();
         }
+        /// <summary>
+        /// Receives a POST request containing information about teacher to be added in the system,
+        /// with new values. Conveys this information to the API, and redirects to the "Teacher List"
+        /// page of our add teacher.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="TeacherFname"></param>
+        /// <param name="TeacherLname"></param>
+        /// <param name="HireDate"></param>
+        /// <param name="Salary"></param>
+        /// <returns>A dynamic webpage which provides the list of the teacher.</returns>
+        /// <example>
+        /// POST : Teacher/create/10
+        /// FROM DATA /POST DATA / REQUEST BODY
+        /// {
+        /// "TeacherFname": "Madiha";
+        /// "TeacherLname":   '"Umair";
+        /// "HireDate": "2/01/2022";
+        /// "Salary": "4000";
+        /// }
+        /// </example>
 
         //POST : /Teacher/Create
         [HttpPost]
@@ -72,6 +93,8 @@ namespace CumulativeProject.Controllers
             Debug.WriteLine(Salary);
 
             Teacher NewTeacher = new Teacher();
+            if(TeacherFname =="")
+            { Response.Write("<script>alert('User first name should be required!');</script>"); }
             NewTeacher.TeacherFname= TeacherFname;
             NewTeacher.TeacherLname= TeacherLname;
             NewTeacher.HireDate= HireDate;
@@ -89,8 +112,6 @@ namespace CumulativeProject.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-
-
         public ActionResult Edit(int id)
         {
             //Need to get the information about the teacher
@@ -135,6 +156,7 @@ namespace CumulativeProject.Controllers
             Debug.WriteLine(Salary);
 
             Teacher UpdatedTeacher = new Teacher();
+            //Use C# Server Side Validation to ensure that there is no missing information when a teacher is updated(such as teacher Salary)
             UpdatedTeacher.TeacherFname = TeacherFname;
             UpdatedTeacher.TeacherLname = TeacherLname;
             UpdatedTeacher.HireDate = HireDate;
@@ -145,7 +167,37 @@ namespace CumulativeProject.Controllers
 
             return RedirectToAction("Show/" +id);
 
+        }
 
+
+        //GET : /Teacher/New
+
+        public ActionResult Ajax_NewTeacher()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult AddNew(string TeacherFname, string TeacherLname, DateTime HireDate, decimal Salary)
+        {
+            //Identify that this method is running
+            //Identify the inputs provided from the form
+
+            Debug.WriteLine("I have access to Create Method");
+            Debug.WriteLine(TeacherFname);
+            Debug.WriteLine(TeacherLname);
+            Debug.WriteLine(HireDate);
+            Debug.WriteLine(Salary);
+
+            Teacher AddNewTeacher = new Teacher();
+            AddNewTeacher.TeacherFname= TeacherFname;
+            AddNewTeacher.TeacherLname= TeacherLname;
+            AddNewTeacher.HireDate= HireDate;
+            AddNewTeacher.Salary= Salary;
+
+            TeacherDataController controller = new TeacherDataController();
+            controller.AddTeacher(AddNewTeacher);
+
+            return RedirectToAction("List");
         }
     }
 }
